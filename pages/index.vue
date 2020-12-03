@@ -25,6 +25,16 @@ export default Vue.extend({
     this.joke = await this.$content('submissions', submission).fetch()
   },
 
+  async asyncData({ $content, store }) {
+    const submissions = store.getters.submissions
+    const submission =
+      submissions[Math.floor(Math.random() * submissions.length)]
+
+    const joke = await $content('submissions', submission).fetch()
+
+    return { joke }
+  },
+
   data() {
     return {
       joke: {},
