@@ -2,10 +2,10 @@
   <div
     class="flex justify-center items-center text-center w-screen h-screen bg-blue-200"
   >
-    <Video class="object-cover" />
+    <p>{{ joke }}</p>
     <nuxt-link
       class="absolute bottom-0 mb-12 bg-white border-1 shadow-xl border-black text-black text-2xl font-bold px-20 py-2 rounded-xl"
-      :to="`/${rand}`"
+      :to="`/rand`"
       >Another!</nuxt-link
     >
   </div>
@@ -17,10 +17,14 @@ import Vue from 'vue'
 export default Vue.extend({
   transition: 'page',
 
-  computed: {
-    rand(): string {
-      return Math.random().toString(20).substr(2, 3)
-    },
+  async asyncData({ $content, store }) {
+    const submissions = store.getters.submissions
+    const submission =
+      submissions[Math.floor(Math.random() * submissions.length)]
+
+    const joke = await $content('submissions', submission).fetch()
+
+    return { joke }
   },
 })
 </script>

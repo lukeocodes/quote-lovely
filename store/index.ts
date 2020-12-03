@@ -1,6 +1,4 @@
-import path from 'path'
 import { GetterTree, ActionTree, MutationTree } from 'vuex'
-import globby from 'globby'
 
 export const state = () => ({
   submissions: [] as string[],
@@ -18,9 +16,14 @@ export const mutations: MutationTree<RootState> = {
 
 export const actions: ActionTree<RootState, RootState> = {
   async nuxtServerInit({ commit }) {
-    const dir = 'content/submissions'
+    const path = require('path')
+    const globby = require('globby')
+    const dir = 'content/submissions/*.json'
     const paths = await globby(dir)
 
-    await commit('SUBMISSIONS', paths)
+    await commit(
+      'SUBMISSIONS',
+      paths.map((glob: any) => path.basename(glob, '.json'))
+    )
   },
 }
