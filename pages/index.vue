@@ -17,15 +17,21 @@ import Vue from 'vue'
 export default Vue.extend({
   transition: 'page',
 
-  async asyncData({ $content, store }) {
-    const submissions = store.getters.submissions
+  async fetch() {
+    const submissions = this.$store.getters.submissions
     const submission =
       submissions[Math.floor(Math.random() * submissions.length)]
 
-    const joke = await $content('submissions', submission).fetch()
-
-    return { joke }
+    this.joke = await this.$content('submissions', submission).fetch()
   },
+
+  data() {
+    return {
+      joke: {},
+    }
+  },
+
+  fetchOnServer: false,
 })
 </script>
 
